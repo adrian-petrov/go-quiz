@@ -15,18 +15,33 @@ type Question struct {
 	result    int
 }
 
-type QuestionsReader struct {
-	questions []Question
+func (qs *Question) Operation() string {
+	return qs.operation
 }
 
-func (qr *QuestionsReader) Read() {
-	f, err := os.Open("../problems.csv")
+func (qs *Question) Result() int {
+	return qs.result
+}
+
+func (qs *Question) Mathify() int {
+	eval := goval.NewEvaluator()
+	result, err := eval.Evaluate(qs.operation, nil, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return result.(int)
+}
+
+func ReadFile(filePath string) []Question {
+	f, err := os.Open(filePath)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer f.Close()
 
 	reader := csv.NewReader(f)
+	var questions []Question
 
 	for {
 		line, err := reader.Read()
@@ -47,19 +62,10 @@ func (qr *QuestionsReader) Read() {
 			log.Fatal(err)
 		}
 
-		qr.questions = append(qr.questions, Question{
+		questions = append(questions, Question{
 			operation: questionArr[0],
 			result:    intResult,
 		})
 	}
-}
-
-func (q *Question) Mathify() int {
-	eval := goval.NewEvaluator()
-	result, err := eval.Evaluate(q.operation, nil, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return result.(int)
+	return questions
 }
