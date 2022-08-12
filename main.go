@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	quiz := q.NewQuiz("problems.csv")
+	quiz := q.NewQuiz()
 	quiz.Run()
 }

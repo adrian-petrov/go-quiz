@@ -33,8 +33,8 @@ func (qs *Question) Mathify() int {
 	return result.(int)
 }
 
-func ReadFile(filePath string) []Question {
-	f, err := os.Open(filePath)
+func ReadFile(filePath *string) []Question {
+	f, err := os.Open(*filePath)
 	if err != nil {
 		log.Fatal(err)
 	}
